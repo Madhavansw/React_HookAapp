@@ -1,57 +1,54 @@
 import { useState } from "react";
 
 export default function UseStateHooks() {
-  const [count, setCount] = useState(0);
-  const [name, setName] = useState("React Hook App");
-  const [movie, setMovie] = useState({ name: "react", year: 2024, director: "Madhava" });
   const [movieList, setMovieList] = useState([
-    { name: "react", year: 2024, director: "Madhava" },
-    { name: "c#", year: 2023, director: "Madhava" },
-    { name: "javascript", year: 2026, director: "Madhava" },
+    { id: 1, name: "react", year: 2024, director: "Madhava" },
+    { id: 2, name: "c#", year: 2023, director: "Madhava" },
+    { id: 3, name: "javascript", year: 2026, director: "Madhava" },
   ]);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const removeMovie = (id) => {
+    setMovieList(movieList.filter((m) => m.id !== id));
+    if (selectedId === id) setSelectedId(null); // clear the selection if it was removed
+  };
+
+  const selectedMovie = movieList.find((m) => m.id === selectedId);
 
   return (
     <>
-      <h1>Welcome to {name}</h1>
-
-      {/* 1. Number state */}
-      <h2>Count: {count}</h2>
-      <div>
-        <button onClick={() => setCount(count + 1)}>Increment</button>
-        <button onClick={() => setCount(count - 1)}>Decrement</button>
-        <button onClick={() => setCount(0)}>Reset</button>
-      </div>
-
-      {/* 2. String state */}
-      <h2>Name</h2>
-      <input value={name} onChange={(e) => setName(e.target.value)} />
-
-      {/* 3. Object state */}
-      <h2>Movie</h2>
-      <p>{movie.name} | {movie.year} | {movie.director}</p>
-      <button onClick={() => setMovie({ ...movie, year: movie.year + 1 })}>
-        Year +1
-      </button>
-
-      {/* 4. Array state */}
       <h2>Movie List</h2>
       <ul>
         {movieList.map((m) => (
-          <li key={m.name}>
+          <li
+            key={m.id}
+            onClick={() => setSelectedId(m.id)}
+            style={{
+              cursor: "pointer",
+              background: selectedId === m.id ? "#cce5ff" : "transparent",
+            }}
+          >
             {m.name} ({m.year}) - {m.director}
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // don't also trigger the row's select click
+                removeMovie(m.id);
+              }}
+            >
+              Remove
+            </button>
           </li>
         ))}
       </ul>
-      <button
-        onClick={() =>
-          setMovieList([...movieList, { name: "python", year: 2025, director: "Madhava" }])
-        }
-      >
-        Add Movie
-      </button>
-      <button onClick={() => setMovieList(movieList.filter((m) => m.name !== "c#"))}>
-        Remove C#
-      </button>
+
+      {selectedMovie ? (
+        <div>
+          <h3>Selected: {selectedMovie.name}</h3>
+          <p>{selectedMovie.year} | {selectedMovie.director}</p>
+        </div>
+      ) : (
+        <p>No movie selected</p>
+      )}
     </>
   );
 }
