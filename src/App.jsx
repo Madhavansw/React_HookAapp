@@ -5,10 +5,11 @@ import viteLogo from './assets/vite.svg'
 import './App.css'
 import UseStateHooks from "./HooksList/UseStateHooks";
 import Navbar from "./HooksList/Navbar";
-import { useTheme } from "./Context/ThemeContext";
+import { ThemeTwoContextProvider, useThemeTwoContext } from "./Context/ThemeContextTwo";
+import NavbarTwo from "./HooksList/NavbarTwo"
 
 export default function App() {
-  const { theme } = useTheme();
+  const { theme } = useThemeTwoContext();
 
   const styles = {
     minHeight: "100vh",
@@ -19,7 +20,7 @@ export default function App() {
 
   return (
     <div style={styles}>
-      <Navbar />
+      <NavbarTwo />
       <p>The current theme is {theme}.</p>
     </div>
   );
